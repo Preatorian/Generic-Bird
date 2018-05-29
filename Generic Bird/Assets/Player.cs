@@ -6,18 +6,20 @@ using UnityEngine.UI;
 namespace Assets
 {
     public class Player : MonoBehaviour {
-        private float rayLen = 2.5f;
+        private float rayLen = 2f;
         private Vector3 thisPos;
         private List<Vector2> allDirections;
         private List<float> Inputs;
         Rigidbody2D r;
         Text text;
-        NeuralNet net;
+        public NeuralNet net;
+        static float t1;// = Time.time;
         void Start() {
             thisPos = this.transform.position;
             Inputs = new List<float>(new float[] { 0, 0, 0, 0, 0 });
             text = GameObject.Find("Text").GetComponent<Text>();
             r = GetComponent<Rigidbody2D>();
+            this.GetComponent<Animator>().speed = 2f;
             allDirections = new List<Vector2>();
             allDirections.Add(new Vector2(0, 1));
             allDirections.Add(new Vector2(1, 1));
@@ -30,6 +32,7 @@ namespace Assets
         private void OnDrawGizmos()
         {
             Gizmos.DrawRay(transform.position, Vector3.down);
+            
         }
 
         void Update()
@@ -46,22 +49,30 @@ namespace Assets
                 }
                 else
                     Inputs[index] = rayLen;
+                Inputs[index] -= 1;
                 index++;
             }
-            net.inputData = new List<float>(new float[] { 0,0,0,0,0,0,0,0,0,0});
+            net.inputData = Inputs;
             text.text = "";
             foreach (float val in Inputs)
             {
                 text.text += val + "\n";
             }
             if (Input.GetKeyDown(KeyCode.UpArrow))
-                r.AddForce(new Vector2(0, 300));
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-                r.AddForce(new Vector2(-100, 0));
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-                r.AddForce(new Vector2(100, 0));
-
-            net.getResoult();
+                Jump();
+       //     List<List<float>> n1 = net.Layers[3];
+        //    List<List<float>> n2 = net.Layers[5];
+         //   List<List<float>> n3 = NeuralNet.crossLayers(n1,n2);
+            
+            text.text += net.getResoult() + "\n";
+            
+        }
+       
+        void Jump()
+        {
+            this.GetComponent<Animator>().Play(0);
+            r.velocity = new Vector2(0,0);
+            r.AddForce(new Vector2(0, 300));
         }
     }
 }

@@ -59,14 +59,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Main.cs" />
     <Compile Include="Assets\NeuralNet.cs" />
     <Compile Include="Assets\Player.cs" />
     <None Include="Assets\Pixel Bird\Read Me.txt" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/ALL repositories/GenericBird/Generic Bird/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>C:/ALL repositories/Generic Bird/Generic Bird/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/ALL repositories/GenericBird/Generic Bird/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/ALL repositories/Generic Bird/Generic Bird/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity2/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

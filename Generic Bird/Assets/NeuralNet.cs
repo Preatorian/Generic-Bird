@@ -11,25 +11,34 @@ namespace Assets
         public List<float> inputData;
         float output;
         public List<List<List<float>>> Layers;
-        static System.Random rand;
-        public NeuralNet(List<List<List<float>>> Lists)
+        static public int layersCount = 3,
+            neuronCount = 10;
+        private System.Random rand;
+        public float fitness = 0;
+        public NeuralNet(List<List<List<float>>> Lists, int seed)
         {
+            rand = new System.Random(seed);
             Layers = new List<List<List<float>>>(Lists);
         }
-        public NeuralNet()
+        public NeuralNet(int seed)
         {
-            rand  = new System.Random();
-            List<float> nn = new List<float>(new float[] { 0, 0, 0, 0, 0});
+            rand = new System.Random(seed);
+            List<float> nn = new List<float>(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 
             List<List<float>> ii = new List<List<float>>();
             List<List<List<float>>> xx = new List<List<List<float>>>();
             
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < layersCount; i++)
             {
-                for (int n = 0; n < 5; n++)
+                for (int n = 0; n < neuronCount; n++)
                 {
                     ii.Add(new List<float>(new float[] 
                     { 
+                    (float)rand.NextDouble()*2-1,
+                    (float)rand.NextDouble()*2-1,
+                    (float)rand.NextDouble()*2-1,
+                    (float)rand.NextDouble()*2-1,
+                    (float)rand.NextDouble()*2-1,
                     (float)rand.NextDouble()*2-1,
                     (float)rand.NextDouble()*2-1,
                     (float)rand.NextDouble()*2-1,
@@ -43,31 +52,46 @@ namespace Assets
             }
             Layers = new List<List<List<float>>>(xx);
         }
-        float activation(float x)
-        {
-            return (float)(1 / (1 + Math.Exp(-x)));
-        }
-        public void mutate(int min, int max)
+        float activation(float x) => (x<0) ? -1 : 1;
+        //return (float)(1 / (1 + Math.Exp(-x))) * 2 - 1;
+        
+        public int mutate(int index)
         {
             int LayersCount = Layers.Count(),
-                NeuronCount = Layers[1].Count(),
-                NeuronsCapacity = Layers[1][0].Count(),
-                r1 = rand.Next(0, LayersCount),
+                NeuronCount = Layers[0].Count(),
+                NeuronsCapacity = Layers[0][0].Count(),
                 r2 = rand.Next(0, NeuronCount),
                 r3 = rand.Next(0, NeuronsCapacity);
-                Layers[r1][r2][r3] = rand.Next(min, max);
+                Layers[index][r2][r3] = (float)rand.NextDouble()*2-1;
+            return 0;
         }
-        public static List<List<float>> crossLayers(List<List<float>> Layer1, List<List<float>> Layer2)
+        public static List<List<float>> crossLayers(List<List<float>> Layer1, List<List<float>> Layer2,int mid,int ver)
         {
             List<List<float>> Layer = new List<List<float>>();
-            int len = Math.Min(Layer2.Count,Layer1.Count),
-                mid = rand.Next(len);
-            for(int i = 0; i < len; i++)
+            List<float> neuron = new List<float>();
+            int len = Math.Min(Layer2.Count, Layer1.Count);
+            for (int i = 0; i < len; i++)
             {
-                if (mid < i)
-                    Layer.Add(new List<float>(Layer1[i]));
-                else
-                    Layer.Add(new List<float>(Layer2[i]));
+
+                if (ver == 1)
+                {
+
+                    if (mid < i)
+                        Layer.Add(new List<float>(Layer1[i]));
+                    else
+                        Layer.Add(new List<float>(Layer2[i]));
+                }
+                else if(ver==2)
+                {
+                    
+                    neuron.Clear();
+                    for (int n = 0; n < Layer1[0].Count; n++)
+                    {
+                        neuron.Add((Layer1[i][n] + Layer2[i][n]) / 2);
+                    }
+
+                    Layer.Add(new List<float>(neuron));
+                }
             }
             return Layer;
 

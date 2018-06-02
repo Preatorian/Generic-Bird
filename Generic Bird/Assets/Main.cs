@@ -16,7 +16,7 @@ namespace Assets
         System.Random rand;
         Quaternion q;
         Text text;
-        GameObject[] Birds, blocks;
+        GameObject[] Birds, blocks, o;
         List<NeuralNet> Nets;
         void Start()
         {
@@ -46,13 +46,15 @@ namespace Assets
         {
             Nets.Sort((x,y) => new System.Random((int)Time.time).Next());
             Nets.Sort((x,y) => y.fitness.CompareTo(x.fitness));
-            for (int i = Data.PopulationCount-1; i >= 10; i--)
+            for (int i = Data.PopulationCount-1; i >= Data.PopulationCount/2; i--)
                 Nets.RemoveAt(i);
-            for(int i=0; i<10; i+=2)
+            for(int i=0; i< Data.PopulationCount / 2; i+=2)
             {
                 Nets.Add(Crossover(Nets[i], Nets[i + 1], 1));
-                Nets.Add(Crossover(Nets[i+1], Nets[i], 2));
+                if(Data.PopulationCount>Nets.Count)
+                    Nets.Add(Crossover(Nets[i+1], Nets[i], 2));
             }
+
             return 0;
         }
         public NeuralNet Crossover(NeuralNet net1,NeuralNet net2,int ver)
@@ -62,7 +64,7 @@ namespace Assets
             {
                 localNet.Layers.Add(NeuralNet.CrossLayers(net1.Layers[i], net2.Layers[i],rand.Next(NeuralNet.neuronCount), ver));
                 rand = new System.Random(rand.Next());
-                for (int n=0;n<rand.Next(-1,2);n++)
+                for (int n=0;n<rand.Next(1,4);n++)
                 {
                     rand = new System.Random(rand.Next());
                     localNet.mutate(i, GetInstanceID() + n);
@@ -73,16 +75,20 @@ namespace Assets
             
         }
         int a = 0;
-        void Update()
+        void FixedUpdate()
         {
             if (Data.bestFitness < Time.timeSinceLevelLoad)
                 Data.bestFitness = Time.timeSinceLevelLoad;
-            if (Time.time-time>2.5)
+            if (Time.fixedTime-time>3)
             {
                 a += 1;//rand.Next(10);
-                pos.y = (float)(-1.95 + a%3+2); //rand.Next(1,4)*2
+                rand = new System.Random(rand.Next());
+                pos.y = (float)(-1.95 + a % 3 + 2); //rand.Next(0, 3) * 2+1
                 Instantiate(obsticlePrefab, pos, q);
-                time = Time.time;
+                /*o = GameObject.FindGameObjectsWithTag("Finish");
+                if(o.Length>1)
+                Debug.Log(o[0].transform.position - o[1].transform.position);*/
+                time = Time.fixedTime;
             }
             int len = GameObject.FindGameObjectsWithTag("Player").Length;
             if (len == 0)
@@ -93,8 +99,8 @@ namespace Assets
 
             text.text = $"Generation:{Data.generation}\n" +
                         $"Birds Alive:{len}\n" +
-                        $"Best Fitness: {Data.bestFitness.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}\n" +
-                        $"Fitness: {Time.timeSinceLevelLoad.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}\n";
+                        $"Fitness: {Time.timeSinceLevelLoad.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}\n" +
+                        $"Best: {Data.bestFitness.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}\n";
         }
     }
 }

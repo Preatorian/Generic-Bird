@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace Assets
 {
     public class Player : MonoBehaviour {
-        private float rayLen = 8f;
+        private float rayLen = 10f;
         private Vector3 thisPos;
         private List<Vector2> allDirections;
         private List<float> Inputs;
@@ -41,7 +41,7 @@ namespace Assets
                 Data.NeuralNets.Add(net);
             }
         }
-        void Update()
+        void FixedUpdate()
         {
 
             rotation.z = rigid.velocity.y*5;

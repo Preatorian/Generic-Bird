@@ -57,7 +57,6 @@ namespace Assets
                 NeuronsCapacity = Layers[0][0].Count(),
                 r2 = rand.Next(0, NeuronCount),
                 r3 = rand.Next(0, NeuronsCapacity);
-            Debug.Log(r2);
             Layers[index][r2][r3] =  (float)rand.NextDouble() * 2 - 1;
             return 0;
         }

@@ -10,7 +10,7 @@ namespace Assets
         static GameObject instance;
         static public int generation = 1;
         static public List<NeuralNet> NeuralNets;
-        static public int PopulationCount = 20;
+        static public int PopulationCount = 10;
         static public float bestFitness = 0;
         void Awake()
         {

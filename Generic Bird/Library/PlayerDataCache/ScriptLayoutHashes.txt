@@ -1,6 +1,6 @@
-WindowsStandalone
+Android
 PlayerPath?
-C:/ALL repositories/Generic Bird/Generic Bird/Execs/Generic Bird v1.2/Generic Bird v1.2.exe
+C:/ALL repositories/Generic Bird/Generic Bird/Execs/GenericBird v1.2.apk
 SceneListBegin?
 Assets/Scenes/MainScene.unity
 SceneListEnd?

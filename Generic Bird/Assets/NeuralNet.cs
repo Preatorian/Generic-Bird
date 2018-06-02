@@ -10,9 +10,10 @@ namespace Assets
     {
         public List<float> inputData;
         float output;
+        static char seed = (char)10;
         public List<List<List<float>>> Layers;
-        static public int layersCount = 3,
-            neuronCount = 10;
+        static public int layersCount = 1,
+            neuronCount = 5;
         private System.Random rand;
         public float fitness = 0;
         public NeuralNet(List<List<List<float>>> Lists, int seed)
@@ -23,7 +24,6 @@ namespace Assets
         public NeuralNet(int seed)
         {
             rand = new System.Random(seed);
-            List<float> nn = new List<float>(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 
             List<List<float>> ii = new List<List<float>>();
             List<List<List<float>>> xx = new List<List<List<float>>>();
@@ -32,20 +32,7 @@ namespace Assets
             {
                 for (int n = 0; n < neuronCount; n++)
                 {
-                    ii.Add(new List<float>(new float[] 
-                    { 
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1,
-                    (float)rand.NextDouble()*2-1
-
-                    }));
+                    ii.Add(new List<float>(generateRandomArray(neuronCount)));
                 }
                 xx.Add(new List<List<float>>(ii));
                 ii = new List<List<float>>();
@@ -54,18 +41,32 @@ namespace Assets
         }
         float activation(float x) => (x<0) ? -1 : 1;
         //return (float)(1 / (1 + Math.Exp(-x))) * 2 - 1;
-        
-        public int mutate(int index)
+        float[] generateRandomArray(int len)
         {
+            float[] array = new float[len];
+
+            for (int i = 0; i < len; i++)
+                array[i] = (float)rand.NextDouble() * 2 - 1;
+            return array;
+        }
+        public int mutate(int index,int instance)
+        {
+            updateSeed(instance);
             int LayersCount = Layers.Count(),
                 NeuronCount = Layers[0].Count(),
                 NeuronsCapacity = Layers[0][0].Count(),
                 r2 = rand.Next(0, NeuronCount),
                 r3 = rand.Next(0, NeuronsCapacity);
-                Layers[index][r2][r3] = (float)rand.NextDouble()*2-1;
+            Debug.Log(r2);
+            Layers[index][r2][r3] =  (float)rand.NextDouble() * 2 - 1;
             return 0;
         }
-        public static List<List<float>> crossLayers(List<List<float>> Layer1, List<List<float>> Layer2,int mid,int ver)
+        public void updateSeed(int instance)
+        {
+            seed += (char)(((int)Time.time * 1000 + instance) % (seed * 2 + 1));
+            rand = new System.Random(seed);
+        }
+        public static List<List<float>> CrossLayers(List<List<float>> Layer1, List<List<float>> Layer2,int mid,int ver)
         {
             List<List<float>> Layer = new List<List<float>>();
             List<float> neuron = new List<float>();

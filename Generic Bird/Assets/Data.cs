@@ -11,6 +11,7 @@ namespace Assets
         static public int generation = 1;
         static public List<NeuralNet> NeuralNets;
         static public int PopulationCount = 20;
+        static public float bestFitness = 0;
         void Awake()
         {
             if (instance)

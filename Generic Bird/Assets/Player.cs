@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace Assets
 {
     public class Player : MonoBehaviour {
-        private float rayLen = 10f;
+        private float rayLen = 8f;
         private Vector3 thisPos;
         private List<Vector2> allDirections;
         private List<float> Inputs;
@@ -25,35 +25,25 @@ namespace Assets
             rotation = transform.eulerAngles;
             rigid = GetComponent<Rigidbody2D>();
             thisPos = this.transform.position;
-            Inputs = new List<float>(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+            Inputs = new List<float>(new float[NeuralNet.neuronCount]);
             text = GameObject.Find("Text").GetComponent<Text>();
             r = GetComponent<Rigidbody2D>();
             this.GetComponent<Animator>().speed = 2f;
             allDirections = new List<Vector2>();
-            allDirections.Add(new Vector2(-0.1f, 1));
-            allDirections.Add(new Vector2(0.5f, 1));
+            allDirections.Add(new Vector2(0, 1));
             allDirections.Add(new Vector2(1, 1));
-            allDirections.Add(new Vector2(1, 0.5f));
             allDirections.Add(new Vector2(1, 0));
-            allDirections.Add(new Vector2(1, -0.5f));
             allDirections.Add(new Vector2(1, -1));
-            allDirections.Add(new Vector2(0.5f, -1));
             allDirections.Add(new Vector2(0, -1));
-            allDirections.Add(new Vector2(-0.1f, -1));
-            if(Data.NeuralNets.Count < Data.PopulationCount)
+            if (Data.NeuralNets.Count < Data.PopulationCount)
             {
                 net = new NeuralNet(GetInstanceID());
                 Data.NeuralNets.Add(net);
             }
         }
-        private void OnDrawGizmos()
-        {
-            Gizmos.DrawRay(transform.position, Vector3.down);
-            
-        }
-
         void Update()
         {
+
             rotation.z = rigid.velocity.y*5;
             transform.eulerAngles = rotation;
             thisPos = this.transform.position;
